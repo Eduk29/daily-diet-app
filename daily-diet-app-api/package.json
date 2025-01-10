@@ -1,0 +1,46 @@
+{
+  "name": "daily-diet-app-api",
+  "version": "1.0.0",
+  "description": "A NodeJS API to an app for tracking your daily meals, allowing for a more organized and efficient way to monitor your diet.",
+  "main": "index.js",
+  "scripts": {
+    "dev": "tsx watch src/server.ts",
+    "knex": "node --import tsx ./node_modules/knex/bin/cli.js",
+    "lint:check": "npx eslint",
+    "lint:fix": "npx eslint --fix",
+    "prettier:check": "npx prettier src/**/*.{js,jsx,ts,tsx} --check",
+    "prettier:fix": "npx prettier src/**/*.{js,jsx,ts,tsx} --write"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Eduk29/daily-diet-app.git"
+  },
+  "author": "José Eduardo Trindade E Marques",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Eduk29/daily-diet-app/issues"
+  },
+  "homepage": "https://github.com/Eduk29/daily-diet-app#readme",
+  "devDependencies": {
+    "@eslint/eslintrc": "^3.2.0",
+    "@eslint/js": "^9.17.0",
+    "@types/node": "^22.10.5",
+    "@types/supertest": "^6.0.2",
+    "eslint": "^9.17.0",
+    "globals": "^15.14.0",
+    "prettier": "^3.4.2",
+    "supertest": "^7.0.0",
+    "tsup": "^8.3.5",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.3",
+    "vitest": "^2.1.8"
+  },
+  "dependencies": {
+    "@fastify/cookie": "^11.0.2",
+    "dotenv": "^16.4.7",
+    "fastify": "^5.2.1",
+    "knex": "^3.1.0",
+    "sqlite3": "^5.1.7",
+    "zod": "^3.24.1"
+  }
+}
