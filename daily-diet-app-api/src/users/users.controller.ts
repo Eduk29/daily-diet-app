@@ -1,7 +1,7 @@
 import { FastifyInstance } from "fastify";
 import { z } from "zod";
 import { knex } from "../database";
-import { randomUUID } from "node:crypto";
+import crypto from "node:crypto";
 
 export const userController = async (app: FastifyInstance) => {
 
