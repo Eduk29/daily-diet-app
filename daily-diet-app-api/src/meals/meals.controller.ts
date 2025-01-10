@@ -52,7 +52,7 @@ export const mealsController = async (app: FastifyInstance) => {
             console.error('Invalid request body', error);
             return response.status(400).send({
                 title: 'Bad Request',
-                message: 'Invalid request body, please provide name and email!'
+                message: 'Invalid request body, please provide meals informations!'
             })
         }
     })
@@ -76,5 +76,40 @@ export const mealsController = async (app: FastifyInstance) => {
             })
         })
 
+    })
+
+    // TODO: Implement the endpoint to get a meal by ID
+    app.get('/:id', { preHandler: extractSessionIdFromCookie }, async (request: FastifyRequest, response: FastifyReply) => {
+        // TODO: Validate meal ID from request
+        const getMealIdParamSchema = z.object({
+            id: z.string().uuid()
+        })
+
+        try {
+            // TODO: Extract meal ID from request
+            const { id } = getMealIdParamSchema.parse(request.params);
+
+            // TODO: Extract user ID from request
+            const userId = request.user?.id
+
+            // TODO: Load meal from the database by ID and user ID
+            await knex('meals').where({ id }).andWhere({ user_id: userId }).select().first().then((meal) => {
+                // TODO: Return success response with meal information
+                return response.status(200).send({ meal });
+            }).catch((error) => {
+                console.error('Error loading meal', error);
+                return response.status(500).send({
+                    title: 'Internal Server Error',
+                    message: 'Error loading meal, please try again later!'
+                })
+            });
+
+        } catch (error) {
+            console.error('Invalid request parameter', error);
+            return response.status(400).send({
+                title: 'Bad Request',
+                message: 'Invalid request parameter, please provide meal ID!'
+            })
+        }
     })
 }
