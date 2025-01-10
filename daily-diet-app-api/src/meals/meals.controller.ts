@@ -48,11 +48,7 @@ export const mealsController = async (app: FastifyInstance) => {
             })
 
         } catch (error) {
-            console.error('Invalid request body', error);
-            return response.status(400).send({
-                title: 'Bad Request',
-                message: 'Invalid request body, please provide meals informations!'
-            })
+            _invalidBodyInRequestHandler(response, error);
         }
     })
 
@@ -104,11 +100,7 @@ export const mealsController = async (app: FastifyInstance) => {
             });
 
         } catch (error) {
-            console.error('Invalid request parameter', error);
-            return response.status(400).send({
-                title: 'Bad Request',
-                message: 'Invalid request parameter, please provide meal ID!'
-            })
+            _invalidBodyInRequestHandler(response, error);
         }
     })
 
@@ -167,11 +159,7 @@ export const mealsController = async (app: FastifyInstance) => {
                 return response.status(403).send({ message: "You don't have permission to update this meal" });
             }
         } catch (error) {
-            console.error('Invalid request parameter', error);
-            return response.status(400).send({
-                title: 'Bad Request',
-                message: 'Invalid request parameter OR meal information, please provide meal ID AND meal information!'
-            })
+            _invalidBodyInRequestHandler(response, error);
         }
     })
 
@@ -212,11 +200,7 @@ export const mealsController = async (app: FastifyInstance) => {
             }
 
         } catch (error) {
-            console.error('Invalid request parameter', error);
-            return response.status(400).send({
-                title: 'Bad Request',
-                message: 'Invalid request parameter OR meal information, please provide meal ID AND meal information!'
-            })
+            _invalidBodyInRequestHandler(response, error);
         }
     })
 
@@ -242,35 +226,39 @@ export const mealsController = async (app: FastifyInstance) => {
             // TODO: Return success response with the summary information
             return response.status(200).send({ totalMeals: meals.length, mealsOnDiet: mealsOnDiet.length, mealsNotOnDiet: mealsNotOnDiet.length, bestSequenceOfMealsInDiet });
         }).catch((error) => {
-            console.error('Error loading meals', error);
-            return response.status(500).send({
-                title: 'Internal Server Error',
-                message: 'Error loading meals, please try again later!'
-            })
+            _invalidBodyInRequestHandler(response, error);
         });
     })
+}
 
-    const _calculateMealsInDiet = (meals: any[]) => {
-        return meals.filter((meal) => meal.is_in_diet);
-    }
+const _calculateMealsInDiet = (meals: any[]) => {
+    return meals.filter((meal) => meal.is_in_diet);
+}
 
-    const _calculateMealsNotInDiet = (meals: any[]) => {
-        return meals.filter((meal) => !meal.is_in_diet);
-    }
+const _calculateMealsNotInDiet = (meals: any[]) => {
+    return meals.filter((meal) => !meal.is_in_diet);
+}
 
-    const _calculateBestSequenceOfMealsInDiet = (meals: any[]) => {
-        const { onDietSequence } = meals.reduce(
-            (acc, meal) => {
-                acc.currentSequence = meal.is_in_diet ? acc.currentSequence + 1 : 0;
+const _calculateBestSequenceOfMealsInDiet = (meals: any[]) => {
+    const { onDietSequence } = meals.reduce(
+        (acc, meal) => {
+            acc.currentSequence = meal.is_in_diet ? acc.currentSequence + 1 : 0;
 
-                if (acc.currentSequence > acc.onDietSequence) {
-                    acc.onDietSequence = acc.currentSequence
-                }
-                return acc
-            },
-            { onDietSequence: 0, currentSequence: 0 },
-        )
+            if (acc.currentSequence > acc.onDietSequence) {
+                acc.onDietSequence = acc.currentSequence
+            }
+            return acc
+        },
+        { onDietSequence: 0, currentSequence: 0 },
+    )
 
-        return onDietSequence;
-    }
+    return onDietSequence;
+}
+
+const _invalidBodyInRequestHandler = (response: FastifyReply, error: unknown) => {
+    console.error('Invalid request body', error);
+    return response.status(400).send({
+        title: 'Bad Request',
+        message: 'Invalid request body, please provide meals informations!'
+    })
 }
