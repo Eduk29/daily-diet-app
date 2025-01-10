@@ -56,4 +56,25 @@ export const mealsController = async (app: FastifyInstance) => {
             })
         }
     })
+
+    // TODO: Implement the endpoint to get all meals created by the user and in descending order
+    app.get('/', { preHandler: extractSessionIdFromCookie }, async (request: FastifyRequest, response: FastifyReply) => {
+
+        // TODO: Extract user ID from request
+        const userId = request.user?.id;
+
+        // TODO: Load all meals from the database by the user and in descending order
+        await knex('meals').where('user_id', userId).orderBy('created_at', 'desc').then((meals) => {
+
+            // TODO: Return success response with all meals information
+            return response.status(200).send({ meals });
+        }).catch((error) => {
+            console.error('Error loading meals', error);
+            return response.status(500).send({
+                title: 'Internal Server Error',
+                message: 'Error loading meals, please try again later!'
+            })
+        })
+
+    })
 }
